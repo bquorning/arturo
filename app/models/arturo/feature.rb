@@ -25,7 +25,11 @@ module Arturo
     # @return [Arturo::Feature, nil] the Feature if found, else nil
     def self.to_feature(feature_or_symbol)
       return feature_or_symbol if feature_or_symbol.kind_of?(self)
-      self.find(:first, :select => 'id, symbol, deployment_percentage', :conditions => { :symbol => feature_or_symbol.to_s })
+      self.find(:first, :select => select_columns, :conditions => { :symbol => feature_or_symbol.to_s })
+    end
+
+    def self.select_columns
+      @select_columns ||= (column_names - %w[created_at updated_at]).join(", ")
     end
 
     # Create a new Feature
